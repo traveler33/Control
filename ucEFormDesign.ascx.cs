@@ -13,7 +13,7 @@ using System.Collections;
 using System.Text;
 using Pelesys.Common;
 using Pelesys.Web;
-using Pelesys.Scheduling;
+
 
 namespace eForm.Controls
 {
@@ -22,7 +22,7 @@ namespace eForm.Controls
         #region Const
 
         #region Message
-
+        
         const string ValidationEnterTabName_Message = "Please enter a new tab name.";
         const string ValidationTabNameAlreadyExist_Message = "This tab name already exists. Please select another one.";
         const string ValidationFieldNameAlreadyExist_Message = "This field name already exists. Please select another one.";
@@ -37,6 +37,8 @@ namespace eForm.Controls
         const string Action_TabDeleteConfirm_Message = "Are you sure that you want to delete this tab?";
         const string Action_FieldDeleteConfirm_Message = "Are you sure that you want to delete this Field?";
 
+        const string ValidationFormNameExist_Message = "This form name already exist. Please change another one.";
+        const string ValidationEnterFormName_Message = "Please enter a form name.";
         const string ValidationEnterFieldName_Message = "Please enter a field name.";
         const string ValidationEnterLabelContent_Message = "Please enter a label content.";
         const string ValidationEnterSize_Message = "Please enter a text box size.";
@@ -394,11 +396,11 @@ namespace eForm.Controls
 
             lblTextBoxName.Text = GetString("eFormTab_Field_Name", "Name");
             lblLabelName.Text = GetString("eformTab_Field_lblName", "Label Name");
-            chkFieldEnabled.Text = GetString("eformTab_Field_Enabled_CheckBox", "Enabled");
-            chkFieldVisible.Text = GetString("eformTab_Field_Visible_CheckBox", "Visible");
+            lblFieldEnabled.Text = GetString("eformTab_Field_Enabled_CheckBox", "Enabled");
+            lblFieldVisible.Text = GetString("eformTab_Field_Visible_CheckBox", "Visible");
 
             lblFormTextBox.Text = GetString("accordionFormDesign_TextBox", "Text Box");
-            lblSize.Text = GetString("accourdionFormDesign_Size", "Size");
+          //  lblSize.Text = GetString("accourdionFormDesign_Size", "Size");
             lbltxtHeight.Text = GetString("accourdion_Height","Height:");
             lbltxtboxWidth.Text = GetString("accourding_Width", "Width:");
 
@@ -483,6 +485,28 @@ namespace eForm.Controls
 
         protected bool IsValidNewField()
         {
+            if ( this.txtFormName.Text == string.Empty)
+            {
+                string msg = ValidationEnterFormName_Message;
+                Guid oguid = new Guid();
+                ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "callBoxFancy('eFormWarnStatus','" + msg + "');", true);
+                return false;
+            }
+
+
+            //Make sure form name is uqi 
+            Pelesys.Scheduling.DesignForm eform = Pelesys.Scheduling.DesignForm.GetDataByName(txtFormName.Text);
+            if (eform != null)
+            {
+
+                string msg = ValidationFormNameExist_Message;
+                Guid oguid = new Guid();
+                ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "callBoxFancy('eFormWarnStatus','" + msg + "');", true);
+                return false;
+            
+            
+            }
+
             if (txtTextBoxName.Text == string.Empty)
             {
                 string msg = ValidationEnterFieldName_Message;
@@ -758,25 +782,25 @@ namespace eForm.Controls
             if (this.accordionFormDesign.SelectedIndex == 0)
             {
 
-                if (txtSize.Text == string.Empty && radText.Checked)
-                {
-                    string msg = ValidationEnterSize_Message;
-                    Guid oguid = new Guid();
-                    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "showToolTip(event,'" + msg + "', '" + this.txtSize.ClientID + "',  true);", true);
-                   // ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "callBoxFancy('eFormWarnStatus','" + msg + "');", true);
-                    return false;
-                }
-                string sNum = txtSize.Text.Trim();
+                //if (txtSize.Text == string.Empty && radText.Checked)
+                //{
+                //    string msg = ValidationEnterSize_Message;
+                //    Guid oguid = new Guid();
+                //    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "showToolTip(event,'" + msg + "', '" + this.txtSize.ClientID + "',  true);", true);
+                //   // ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "callBoxFancy('eFormWarnStatus','" + msg + "');", true);
+                //    return false;
+                //}
+                string sNum = string.Empty ;
                 int num;
                 bool isNum = int.TryParse(sNum, out num);
 
-                if (!isNum && radText.Checked)
-                {
-                    string msg = ValidationParseSize_Message;
-                    Guid oguid = new Guid();
-                    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "callBoxFancy('eFormWarnStatus','" + msg + "');", true);
-                    return false;
-                }
+                //if (!isNum && radText.Checked)
+                //{
+                //    string msg = ValidationParseSize_Message;
+                //    Guid oguid = new Guid();
+                //    ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "callBoxFancy('eFormWarnStatus','" + msg + "');", true);
+                //    return false;
+                //}
 
                 //txtboxHeight
                 if (txtboxHeight.Text == string.Empty)
@@ -1147,7 +1171,7 @@ namespace eForm.Controls
 
             oFormField.SkinID = PropertySkinID;
             oFormField.Name = txtTextBoxName.Text.Replace(" ", string.Empty);
-            oFormField.ControlSize = txtSize.Text;
+         //   oFormField.ControlSize = txtSize.Text;
             oFormField.Label = ExistingLabel;
 
               DesignFormTab otab = DesignFormTab.Load<DesignFormTab>(ddlCurrentTab.SelectedValue);
@@ -1203,6 +1227,15 @@ namespace eForm.Controls
                 return;
             }
 
+            DesignFormField.checkFieldMax(true, eFormID);
+            if (DesignFormField.error != string.Empty)
+            {
+                Guid oMaxguid = new Guid();
+                ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oMaxguid.ToString(), "callBoxFancy('eFormWarnStatus','" + DesignFormField.error + "');", true);
+                return;
+            }
+
+
             // ini position
             string StartPos = "0";
             string ControlLeft = "0";
@@ -1254,15 +1287,65 @@ namespace eForm.Controls
                 oDesign.Label = oAtLabel.Text;
             }
             oDesign.ControlType =iControlType;
-            oDesign.IsVisible = chkVisible.Checked == true? true : false;
-            oDesign.IsEnabled = chkActive.Checked == true? true : false;
+            oDesign.IsVisible = this.chkFieldVisible.Checked == true? true : false;
+            oDesign.IsEnabled =  this.chkFieldEnabled.Checked == true? true : false;
+            DesignFormTab otab = new DesignFormTab();
             if ( ddlCurrentTab.SelectedValue != string.Empty )
             {
-                 oDesign.TabID = Convert.ToInt16 ( ddlCurrentTab.SelectedValue);
-            }
+                //add form first if form id is 0
+                if (eFormID == 0)
+                {
+                    DesignForm oform = new DesignForm();
+                    oform.Name = txtFormName.Text;
+                    eFormName = txtFormName.Text;
+                    DesignForm.Save(oform);
+                    eFormID = oform.FormID;
+                }
+                
+                if (Session[SessionTabList] != null)
+                {
+                    List<DesignFormTab> oList = Session[SessionTabList] as List<DesignFormTab>;
+                    var otablist = from o in oList
+                                   where o.SysIdentity == ddlCurrentTab.SelectedValue
+                                   select o;
+                    if (otablist != null && otablist.Count() > 0)
+                    {
+                        DesignFormTab ofield = otablist.FirstOrDefault();
+                        if (ofield.FormTabID == 0)
+                        { 
+                            //check this tab name is not exist before with the same form 
+                            if (DesignFormTab.IsTabNameExist(eFormID, string.Empty, ofield.Name))
+                            {
+                                string Tabmsg = ValidationTabNameAlreadyExist_Message;
+                                  Guid oTabguid = new Guid();
+                                  ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oTabguid.ToString(), "callBoxFancy('eFormWarnStatus','" + Tabmsg + "');", true);
+                                 return;
+                            
+                            }
+                            // save it to the database
+                           
+                            ofield.FormID = eFormID;
+                            DesignFormTab.Save<DesignFormTab>(ofield);
+                            // update tab list
+                             List<DesignFormTab> oNewList = DesignFormTab.GetDataBy(eFormID);
+                             Session[SessionTabList] = oNewList;
+                             oDesign.TabID = ofield.FormTabID;
+                             oDesign.FormID = eFormID;
+                             otab = ofield;
+                        }
+                       
+
+                    }
+
+                    else
+                    {
+                        oDesign.TabID = 1;
+                    }
+                }
+          }
             else
             {
-                  oDesign.TabID =0;
+                  oDesign.TabID =1;
             
             }
             oDesign.SkinID = oControl.SkinID;
@@ -1284,7 +1367,7 @@ namespace eForm.Controls
             {
                 if (this.ddlCurrentTab.SelectedValue != string.Empty)
                 {
-                    DesignFormTab otab = DesignFormTab.Load<DesignFormTab>(ddlCurrentTab.SelectedValue);
+                  // DesignFormTab otab = DesignFormTab.GetDataBySysIdentity(eFormID,ddlCurrentTab.SelectedValue);
                     TabPanel oPanel = CurrentTab.FindControl(otab.SysIdentity) as TabPanel;
                     if (oPanel != null)
                     {
@@ -1417,7 +1500,11 @@ namespace eForm.Controls
             iControlType = Convert.ToInt16(FormDesign.ControlType.HyperLink);
 
             oHyperlink.SkinID = HyperlinkSkinID;
-            DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value));
+           // DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value), Convert.ToInt16(eFormID), null );
+           // DesignFormField.checkFieldMax(
+
+
+                
             return (System.Web.UI.Control)oHyperlink;
         }
 
@@ -1447,10 +1534,19 @@ namespace eForm.Controls
             iControlType = Convert.ToInt16(FormDesign.ControlType.HyperLink);
            
             oHyperlink.SkinID = HyperlinkSkinID;
-            DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value));
+          //  DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value),  Convert.ToInt32(eFormID), oDesign);
+
+            DesignFormField.checkFieldMax(IsUpdate, eFormID);
+            if ( DesignFormField.error != string.Empty )
+            {
+                Guid oguid = new Guid();
+                ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "callBoxFancy('eFormSucessStatus','" + DesignFormField.error + "');", true);
+
+            }
+
             return (System.Web.UI.Control)oHyperlink;
         }
-
+        
         protected System.Web.UI.Control CreateImage(string ControlName, ref DesignFormField oFormField)
         {
 
@@ -1508,7 +1604,7 @@ namespace eForm.Controls
             //DateTime type.
             string DataType = "Varchar(500)";
             iControlType = Convert.ToInt16(FormDesign.ControlType.Image);
-            DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value));
+         //   DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), null);
             return (System.Web.UI.Control)oImageControl;
 
 
@@ -1575,7 +1671,7 @@ namespace eForm.Controls
             //DateTime type.
             string DataType = "Varchar(500)";
            iControlType = Convert.ToInt16(FormDesign.ControlType.Image);
-           DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value));
+        //   DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), oDesign );
             return (System.Web.UI.Control)oImageControl;
 
         
@@ -1617,7 +1713,7 @@ namespace eForm.Controls
             //DateTime type.
             string DataType = "DateTime";
             iControlType = Convert.ToInt16(FormDesign.ControlType.DateTime);
-            DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value));
+         //   DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), null);
             return (System.Web.UI.Control)oTextBox;
 
         }
@@ -1656,7 +1752,7 @@ namespace eForm.Controls
             //DateTime type.
             string  DataType = "DateTime";
             iControlType = Convert.ToInt16(FormDesign.ControlType.DateTime);
-            DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value));
+        //    DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), oDesign);
            return (System.Web.UI.Control)oTextBox;
         
         }
@@ -1689,7 +1785,7 @@ namespace eForm.Controls
             //bit type
             string DataType = "bit";
             iControlType = Convert.ToInt16(FormDesign.ControlType.CheckBox);
-            DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value));
+         //   DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), null);
 
             return (System.Web.UI.Control)oCheckBox;
 
@@ -1728,7 +1824,7 @@ namespace eForm.Controls
             //bit type
             string DataType = "bit";
             iControlType = Convert.ToInt16(FormDesign.ControlType.CheckBox);
-            DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, true, Convert.ToInt16(hidFieldID.Value));
+        //    DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, true, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), oDesign);
 
             return (System.Web.UI.Control)oCheckBox;
         
@@ -1737,7 +1833,7 @@ namespace eForm.Controls
         protected System.Web.UI.Control CreateTextBox(string TextName, ref DesignFormField oFormField)
         {
 
-            oFormField.ControlSize = txtSize.Text;
+          //  oFormField.ControlSize = txtSize.Text;
             oFormField.Width = Convert.ToInt16(this.txtboxWidth.Text);
             oFormField.Height = Convert.ToInt16(this.txtboxHeight.Text);
             oFormField.IsReadOnly = ChkReadOnly.Checked == true ? true : false;
@@ -1755,11 +1851,11 @@ namespace eForm.Controls
             oTextBox.SkinID = TextBoxDefaultSkinID;
 
             //Nvarchar type. Default size is 100
-            string DataType = "nVarchar(" + this.txtSize.Text + ")";
+        //    string DataType = "nVarchar(" + this.txtSize.Text + ")";
             iControlType = Convert.ToInt16(FormDesign.ControlType.TextBox);
             if (this.radMoney.Checked)
             {
-                DataType = "Money";
+              //  DataType = "Money";
                 oTextBox.SkinID = TextBoxMoneySkinID;
                 iControlType = Convert.ToInt16(FormDesign.ControlType.Money);
             }
@@ -1770,7 +1866,7 @@ namespace eForm.Controls
                 if (radTextArea.Checked)
                 {
                     iControlType = Convert.ToInt16(FormDesign.ControlType.TextArea);
-                    DataType = "nText";
+                  //  DataType = "nText";
                     oTextBox.TextMode = TextBoxMode.MultiLine;
 
                     oTextBox.SkinID = TextAreaDefaultSkinID;
@@ -1795,7 +1891,7 @@ namespace eForm.Controls
             {
                 oTextBox.SkinID = txtSkin.Text;
             }
-            DesignFormField.ModifyDBTable(DBTableName, TextName, DataType, false, Convert.ToInt16(hidFieldID.Value));
+          //  DesignFormField.ModifyDBTable(DBTableName, TextName, DataType, false, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), null);
 
             return (System.Web.UI.Control)oTextBox;
 
@@ -1808,7 +1904,7 @@ namespace eForm.Controls
             {
                 oDesign = oFormField;
             }
-            oDesign.ControlSize = txtSize.Text;
+           // oDesign.ControlSize = txtSize.Text;
             oDesign.Width = Convert.ToInt16(this.txtboxWidth.Text);
             oDesign.Height = Convert.ToInt16( this.txtboxHeight.Text);
             oDesign.IsReadOnly = ChkReadOnly.Checked == true ? true : false;
@@ -1826,11 +1922,11 @@ namespace eForm.Controls
             oTextBox.SkinID = TextBoxDefaultSkinID;
                
             //Nvarchar type. Default size is 100
-            string DataType = "nVarchar(" +  this.txtSize.Text  +")";
+           // string DataType = "nVarchar(" +  this.txtSize.Text  +")";
             iControlType = Convert.ToInt16(FormDesign.ControlType.TextBox);
             if (this.radMoney.Checked)
             {
-                DataType = "Money";
+               // DataType = "Money";
                 oTextBox.SkinID = TextBoxMoneySkinID;
                 iControlType = Convert.ToInt16(FormDesign.ControlType.Money);
             }
@@ -1841,7 +1937,7 @@ namespace eForm.Controls
                 if (radTextArea.Checked)
                 {
                     iControlType = Convert.ToInt16(FormDesign.ControlType.TextArea);
-                    DataType = "nText";
+                //    DataType = "nText";
                     oTextBox.TextMode = TextBoxMode.MultiLine;
                    
                     oTextBox.SkinID = TextAreaDefaultSkinID;
@@ -1866,10 +1962,10 @@ namespace eForm.Controls
             {
                 oTextBox.SkinID = txtSkin.Text;
             }
-            DesignFormField.ModifyDBTable(DBTableName, TextName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value));
+           // DesignFormField.ModifyDBTable(DBTableName, TextName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), oDesign);
 
             return  (System.Web.UI.Control)oTextBox;
-        
+          
         }
 
 
@@ -1904,7 +2000,7 @@ namespace eForm.Controls
             string DataType = "nVarchar(500)";
             iControlType = iControlType = Convert.ToInt16(FormDesign.ControlType.DrowDownList);
 
-            DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value));
+        //    DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, false, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), null);
             return (System.Web.UI.Control)oDDL;
 
         }
@@ -1945,7 +2041,7 @@ namespace eForm.Controls
             string DataType = "nVarchar(500)";
             iControlType = iControlType = Convert.ToInt16(FormDesign.ControlType.DrowDownList);
 
-            DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value));
+          //  DesignFormField.ModifyDBTable(DBTableName, ControlName, DataType, IsUpdate, Convert.ToInt16(hidFieldID.Value), Convert.ToInt32(eFormID), oDesign);
             return (System.Web.UI.Control)oDDL;
         
         }
@@ -2235,7 +2331,7 @@ namespace eForm.Controls
 
         protected void SetField( string TabIdentifier  , int FormID)
         {
-            bntFieldAdd.Enabled = false;
+          //  bntFieldAdd.Enabled = false;
             bntFieldDelete.Enabled = true;
             DesignFormField oEForm = new DesignFormField();
 
@@ -2298,7 +2394,7 @@ namespace eForm.Controls
             this.accordionFormDesign.SelectedIndex = 0;
             txtboxHeight.Text = "25";
             txtboxWidth.Text = "160";
-            txtSize.Text = "255";
+         //   txtSize.Text = "255";
             ChkReadOnly.Checked =false;
             chkMandatory.Checked =  false;
             txtMSG.Text = string.Empty;
@@ -2408,7 +2504,7 @@ namespace eForm.Controls
             oPane.Enabled = true;
             txtboxHeight.Text = offield.Height.ToString();
             txtboxWidth.Text = offield.Width.ToString();
-            txtSize.Text = offield.ControlSize == null ? string.Empty : offield.ControlSize;
+           // txtSize.Text = offield.ControlSize == null ? string.Empty : offield.ControlSize;
             ChkReadOnly.Checked = offield.IsReadOnly == true ? true : false;
             chkMandatory.Checked = offield.IsMandatory == true ? true : false;
             if (chkMandatory.Checked)
@@ -2462,7 +2558,7 @@ namespace eForm.Controls
             oPane.Enabled = true;
             txtboxHeight.Text = offield.Height.ToString();
             txtboxWidth.Text = offield.Width.ToString();
-            txtSize.Text = offield.ControlSize == null ? offield.ControlSize : string.Empty;
+          //  txtSize.Text = offield.ControlSize == null ? offield.ControlSize : string.Empty;
             ChkReadOnly.Checked = offield.IsReadOnly == true ? true : false;
             chkMandatory.Checked = offield.IsMandatory == true ? true : false;
             if (chkMandatory.Checked)
@@ -2523,7 +2619,7 @@ namespace eForm.Controls
             oPane.Enabled = true;
             txtboxHeight.Text = offield.Height.ToString();
             txtboxWidth.Text = offield.Width.ToString();
-            txtSize.Text = offield.ControlSize == null ? offield.ControlSize : string.Empty;
+          //  txtSize.Text = offield.ControlSize == null ? offield.ControlSize : string.Empty;
             ChkReadOnly.Checked = offield.IsReadOnly ==true ? true : false;
             chkMandatory.Checked = offield.IsMandatory == true ? true : false;
             if (chkMandatory.Checked)
@@ -2683,6 +2779,11 @@ namespace eForm.Controls
             SetAllFields();
             SetSample();
             txtFormName.Text = eFormName;
+            txtTextBoxName.Enabled = false;
+
+            chkFieldEnabled.Checked = true;
+            chkFieldVisible.Checked = true;
+
         }
 
         protected void SetSample()
@@ -2769,6 +2870,7 @@ namespace eForm.Controls
                         Session[SessionTabList] = oTabList;
 
                     }
+                    lstTabList.Items.RemoveAt(0);
                     lstTabList.Items.Add(new ListItem("New...", "-1"));
                 }
                 else
@@ -2865,6 +2967,10 @@ namespace eForm.Controls
             {
                 ddlCurrentTab.Items.Add( new ListItem(otab.Name, otab.SysIdentity  ));
             }
+
+            //profile tab was disabled so first profile tab item in this
+            // drop down list should removed
+            ddlCurrentTab.Items.RemoveAt(0);
             ddlCurrentTab.Items.Add(new ListItem("New...", "-1"));
         }
 
@@ -2891,10 +2997,43 @@ namespace eForm.Controls
 
             ddlFields.Items.Add(new ListItem("New...", "-1"));
 
+            if (ddlFields.Items.Count == 1)
+            {
+                bntFieldAdd.Enabled = true;
+            }
+            else
+            {
+                bntFieldAdd.Enabled = false;
+            }
 
+
+            if (ddlFields.Items.Count == 1)
+            {
+
+                var listcount = DesignFormField.LoadListWhere<DesignFormField>("Where T.formid=" + eFormID + " order by T.Name ");
+                if (listcount != null)
+                {
+                    if (Convert.ToInt32(listcount.Count()) == DesignFormField.maxFields)
+                    {
+                        Guid oMaxguid = new Guid();
+                        ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oMaxguid.ToString(), "callBoxFancy('eFormWarnStatus','" + DesignFormField.MaxError + "');", true);
+                        bntFieldAdd.Enabled = false;
+                        return;
+                    }
+                    else
+                    {
+                        int nf = listcount.Count() + 1;
+                        string sNewfield = "filed" + nf.ToString();
+                        txtTextBoxName.Text = sNewfield;
+                        txtLabelName.Text = sNewfield + " Label:";
+                    
+                    }
+                }
+            
+            }
 
         }
-
+        
         protected void LoadDropDownLists()
         {
             //Load tabs

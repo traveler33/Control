@@ -373,6 +373,15 @@ namespace eForm.Controls {
         protected global::System.Web.UI.WebControls.TextBox txtSkin;
         
         /// <summary>
+        /// lblFieldEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFieldEnabled;
+        
+        /// <summary>
         /// chkFieldEnabled control.
         /// </summary>
         /// <remarks>
@@ -380,6 +389,15 @@ namespace eForm.Controls {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkFieldEnabled;
+        
+        /// <summary>
+        /// lblFieldVisible control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFieldVisible;
         
         /// <summary>
         /// chkFieldVisible control.
@@ -416,24 +434,6 @@ namespace eForm.Controls {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFormTextBox;
-        
-        /// <summary>
-        /// lblSize control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSize;
-        
-        /// <summary>
-        /// txtSize control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSize;
         
         /// <summary>
         /// lbltxtHeight control.

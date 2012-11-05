@@ -36,11 +36,12 @@
 
 
     </script>
-    <table width="100%" style="height: 100%; z-index:999;" border="0" cellpadding="1" cellspacing="1" class="detailEdit" >
+    <table width="100%" style="height: 100%; z-index: 999;" border="0" cellpadding="1"
+        cellspacing="1" class="detailEdit">
         <tr valign="top">
             <td colspan="3">
-                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-                    <ContentTemplate>
+                <asp:updatepanel id="UpdatePanel1" runat="server">
+                    <contenttemplate>
                         <asp:TabContainer ID="TabContainer1" runat="server" ActiveTabIndex="0" CssClass="gray"
                             Visible="true" Width="333px" Height="550px"   >
                             <asp:TabPanel ID="Tabs" HeaderText="Tab" runat="server" ToolTip="Add new tabs, remove tabs and manage tabs">
@@ -194,50 +195,56 @@
                                                 </td>
                                             </tr>
                                             <th>
-                                                <asp:Label ID="lblTextBoxName" runat="server" SkinID="label" Text="Name" ToolTip="Field Name"></asp:Label>
+                                                <asp:Label ID="lblTextBoxName" runat="server" SkinID="label" Text="Name" ToolTip="Field Name"  ></asp:Label>
                                             </th>
                                             <td>
                                                 <asp:TextBox ID="txtTextBoxName" runat="server" MaxLength="100" SkinID="eFormMidTextBox"></asp:TextBox>
                                             </td>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    <asp:Label ID="lblLabelName" runat="server" SkinID="label" Text="Label" ToolTip="Label Text"></asp:Label>
-                                                </th>
-                                                <td>
-                                                    <asp:TextBox ID="txtLabelName" runat="server" MaxLength="100" SkinID="eFormMidTextBox"></asp:TextBox>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    <asp:Label ID="lblSkin" runat="server" SkinID="label" Text="Skin ID" ToolTip="Choose a existing skin id"></asp:Label>
-                                                </th>
-                                                <td>
-                                                    <asp:TextBox ID="txtSkin" runat="server" MaxLength="100" SkinID="eFormMidTextBox"></asp:TextBox>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th  align="center"   style=" font-weight:normal; font-size: 11px; ">
-                                                  
-                                                </th>
-                                                <th>
-                                                  <asp:CheckBox ID="chkFieldEnabled" runat="server" Text="Enabled" TextAlign="Left" />
-                                                    &nbsp;&nbsp;
-                                                    <asp:CheckBox ID="chkFieldVisible" runat="server" Text="Visible" TextAlign="Left" />
-                                                
-                                                </th>
-                                            </tr>
-                                        </table>
-                                        <table cellpadding="2" cellspacing="2" border="0" style="width: 320px; height: 200px;">
-                                            <tr>
-                                                <td colspan="2" valign="top" align="center">
-                                                    <div style="overflow: auto; height: 335px; ">
-                                                        <asp:Accordion ID="accordionFormDesign" runat="server" HeaderCssClass="cssFormDesignAccordionHead"
-                                                            HeaderSelectedCssClass="cssFormDesignSelectedHead" ContentCssClass="cssFormDesignAccordionContent"
-                                                            Width="240px" BorderColor="#F0F0F0" BorderStyle="Solid" BorderWidth="1px" Height="240px"
-                                                            FadeTransitions="false" TransitionDuration="250" FramesPerSecond="40" RequireOpenedPane="false"
-                                                            SuppressHeaderPostbacks="true">
-                                                            <Panes>
+        </tr>
+        <tr>
+            <th>
+                <asp:label id="lblLabelName" runat="server" skinid="label" text="Label" tooltip="Label Text">
+                </asp:label>
+            </th>
+            <td>
+                <asp:textbox id="txtLabelName" runat="server" maxlength="100" skinid="eFormMidTextBox">
+                </asp:textbox>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <asp:label id="lblSkin" runat="server" skinid="label" text="Skin ID" tooltip="Choose a existing skin id">
+                </asp:label>
+            </th>
+            <td>
+                <asp:textbox id="txtSkin" runat="server" maxlength="100" skinid="eFormMidTextBox">
+                </asp:textbox>
+            </td>
+        </tr>
+        <tr>
+            <th align="center" style="font-weight: normal; font-size: 11px;">
+            </th>
+            <th>
+                <asp:label id="lblFieldEnabled" runat="server" skinid="label" text="Enabled" tooltip="Choose a existing skin id">
+                </asp:label>&nbsp;
+                <asp:checkbox id="chkFieldEnabled" runat="server" textalign="Left" />
+                &nbsp;&nbsp;
+                <asp:label id="lblFieldVisible" runat="server" skinid="label" text="Visible" tooltip="Choose a existing skin id">
+                </asp:label>&nbsp;
+                <asp:checkbox id="chkFieldVisible" runat="server" textalign="Left" />
+            </th>
+        </tr>
+    </table>
+    <table cellpadding="2" cellspacing="2" border="0" style="width: 320px; height: 200px;">
+        <tr>
+            <td colspan="2" valign="top" align="center">
+                <div style="overflow: auto; height: 335px;">
+                    <asp:accordion id="accordionFormDesign" runat="server" headercssclass="cssFormDesignAccordionHead"
+                        headerselectedcssclass="cssFormDesignSelectedHead" contentcssclass="cssFormDesignAccordionContent"
+                        width="240px" bordercolor="#F0F0F0" borderstyle="Solid" borderwidth="1px" height="240px"
+                        fadetransitions="false" transitionduration="250" framespersecond="40" requireopenedpane="false"
+                        suppressheaderpostbacks="true">
+                        <panes>
                                                                 <asp:AccordionPane ID="TextBox" HeaderCssClass="cssFormDesignAccordionHead" HeaderSelectedCssClass="cssFormDesignSelectedHead"
                                                                     ContentCssClass="cssFormDesignAccordionContent" runat="server" ToolTip="Text Box">
                                                                     <Header>
@@ -245,14 +252,7 @@
                                                                     </Header>
                                                                     <Content>
                                                                         <table cellpadding="1" cellspacing="1" border="0" style="width: 100%; height: 100%">
-                                                                            <tr>
-                                                                                <th>
-                                                                                    <asp:Label ID="lblSize" runat="server" SkinID="label" Text="Size"></asp:Label>
-                                                                                </th>
-                                                                                <td align="left">
-                                                                                    <asp:TextBox ID="txtSize" runat="server" MaxLength="100" SkinID="eFormTextBox"></asp:TextBox>
-                                                                                </td>
-                                                                            </tr>
+                                                                          
                                                                             <tr>
                                                                                 <th colspan="2">
                                                                                     <asp:Label ID="lbltxtHeight" runat="server" SkinID="label" Text="Height(px)"></asp:Label>
@@ -389,43 +389,44 @@
                                                                                 </th>
                                                                                 <th>
                                                                                     <asp:TextBox ID="txtddlMSG" runat="server" MaxLength="100" SkinID="TextBox"></asp:TextBox>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td align="right">
-                                                                                    <asp:CheckBox ID="chkWithCalendar" runat="server" Checked="true" />
-                                                                                </td>
-                                                                                <th>
-                                                                                    <asp:Label ID="lblWithCalendar" runat="server" SkinID="label" Text="With Calendar"></asp:Label>
-                                                                                    <asp:Label ID="lblCalendar" runat="server" SkinID="label"></asp:Label>
-                                                                                </th>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th>
-                                                                                    <asp:Label ID="lblDateFormat" runat="server" SkinID="label" Text="Format"></asp:Label>
-                                                                                </th>
-                                                                                <td>
-                                                                                    <asp:DropDownList ID="ddlCalendarFormat" runat="server" SkinID="EditModeDropDownList">
-                                                                                    </asp:DropDownList>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th colspan="2">
-                                                                                    <asp:Label ID="Label1" runat="server" SkinID="label" Text="Height(px)"></asp:Label>
-                                                                                    <asp:TextBox ID="txtDateHeight" runat="server" MaxLength="100" SkinID="eFormTextBoxShort"></asp:TextBox>
-                                                                                    <asp:Label ID="Label2" runat="server" SkinID="label" Text="Width(px)"></asp:Label>
-                                                                                    <asp:TextBox ID="txtDateWidth" runat="server" MaxLength="100" SkinID="eFormTextBoxShort"></asp:TextBox>
-                                                                                </th>
-                                                                            </tr>
-                                                                        </table>
-                                                                    </Content>
-                                                                </asp:AccordionPane>
-                                                                <asp:AccordionPane ID="Image" HeaderCssClass="cssFormDesignAccordionHead" HeaderSelectedCssClass=".cssFormDesignSelectedHead"
-                                                                    ContentCssClass="cssFormDesignAccordionContent" runat="server" ToolTip="Image">
-                                                                    <Header>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                <asp:checkbox id="chkWithCalendar" runat="server" checked="true" />
+            </td>
+            <th>
+                <asp:label id="lblWithCalendar" runat="server" skinid="label" text="With Calendar"></asp:label>
+                <asp:label id="lblCalendar" runat="server" skinid="label"></asp:label>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <asp:label id="lblDateFormat" runat="server" skinid="label" text="Format"></asp:label>
+            </th>
+            <td>
+                <asp:dropdownlist id="ddlCalendarFormat" runat="server" skinid="EditModeDropDownList">
+                </asp:dropdownlist>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="2">
+                <asp:label id="Label1" runat="server" skinid="label" text="Height(px)"></asp:label>
+                <asp:textbox id="txtDateHeight" runat="server" maxlength="100" skinid="eFormTextBoxShort">
+                </asp:textbox>
+                <asp:label id="Label2" runat="server" skinid="label" text="Width(px)"></asp:label>
+                <asp:textbox id="txtDateWidth" runat="server" maxlength="100" skinid="eFormTextBoxShort">
+                </asp:textbox>
+            </th>
+        </tr>
+    </table>
+    </Content> </asp:AccordionPane>
+    <asp:accordionpane id="Image" headercssclass="cssFormDesignAccordionHead" headerselectedcssclass=".cssFormDesignSelectedHead"
+        contentcssclass="cssFormDesignAccordionContent" runat="server" tooltip="Image">
+        <header>
                                                                         <asp:Label ID="lblImage" runat="server" SkinID="label" Text="Image"></asp:Label>
-                                                                    </Header>
-                                                                    <Content>
+                                                                    </header>
+        <content>
                                                                         <table>
                                                                             <tr>
                                                                                 <th>
@@ -460,15 +461,15 @@
                                                                                 </th>
                                                                             </tr>
                                                                         </table>
-                                                                    </Content>
-                                                                </asp:AccordionPane>
-                                                                <asp:AccordionPane ID="Hyperlink" HeaderCssClass="cssFormDesignAccordionHead" HeaderSelectedCssClass=".cssFormDesignSelectedHead"
-                                                                    ContentCssClass="cssFormDesignAccordionContent" runat="server" Height="120px"
-                                                                    ToolTip="Hyper link">
-                                                                    <Header>
+                                                                    </content>
+    </asp:accordionpane>
+    <asp:accordionpane id="Hyperlink" headercssclass="cssFormDesignAccordionHead" headerselectedcssclass=".cssFormDesignSelectedHead"
+        contentcssclass="cssFormDesignAccordionContent" runat="server" height="120px"
+        tooltip="Hyper link">
+        <header>
                                                                         <asp:Label ID="lblLinkHead" runat="server" SkinID="label" Text="HyperLink"></asp:Label>
-                                                                    </Header>
-                                                                    <Content>
+                                                                    </header>
+        <content>
                                                                         <table cellpadding="1" cellspacing="1" style="width: 100%; height: 100%">
                                                                             <tr>
                                                                                 <th>
@@ -515,39 +516,24 @@
                                                                                 </th>
                                                                             </tr>
                                                                         </table>
-                                                                    </Content>
-                                                                </asp:AccordionPane>
-                                                            </Panes>
-                                                        </asp:Accordion>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr align="center" valign="bottom">
-                                                <td>
-                                                    <asp:Button ID="bntFieldAdd" runat="server" Text="Add" OnClick="FieldAdd"   SkinID="bntMiddle"/>&nbsp;
-                                                    <asp:Button ID="bntSaveAllFields" runat="server" Text="Save" SkinID="bntMiddle"
-                                                        OnClick="FieldSave" />&nbsp;
-                                                    <asp:Button ID="bntFieldDelete" runat="server" Text="Remove" SkinID="bntMiddle"
-                                                        OnClick="FieldRemove" />&nbsp;
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </asp:Panel>
-                                </ContentTemplate>
-                            </asp:TabPanel>
-                        </asp:TabContainer>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-            </td>
-        </tr>
-    </table>
+                                                                    </content>
+    </asp:accordionpane>
+    </Panes> </asp:Accordion>
 </div>
-<a id="statusBox" href="#status" title="" style="display: none;">Inline</a>
-<asp:HiddenField ID="hidControlList" runat="server" />
-<asp:HiddenField ID="hidLabelList" runat="server" />
+</td> </tr>
+<tr align="center" valign="bottom">
+    <td>
+        <asp:button id="bntFieldAdd" runat="server" text="Add" onclick="FieldAdd" skinid="bntMiddle" />&nbsp;
+        <asp:button id="bntSaveAllFields" runat="server" text="Save" skinid="bntMiddle" onclick="FieldSave" />&nbsp;
+        <asp:button id="bntFieldDelete" runat="server" text="Remove" skinid="bntMiddle" onclick="FieldRemove" />&nbsp;
+    </td>
+</tr>
+</table> </asp:Panel> </ContentTemplate> </asp:TabPanel> </asp:TabContainer> </ContentTemplate>
+</asp:UpdatePanel> </td> </tr> </table> </div> <a id="statusBox" href="#status" title=""
+    style="display: none;">Inline</a>
+<asp:hiddenfield id="hidControlList" runat="server" />
+<asp:hiddenfield id="hidLabelList" runat="server" />
 <div style="display: none;">
-    <div id="status"  style="  width:600px; height: 100px;  ">
+    <div id="status" style="width: 600px; height: 100px;">
     </div>
 </div>
-
-
