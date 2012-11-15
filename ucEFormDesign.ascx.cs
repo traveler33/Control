@@ -54,6 +54,7 @@ namespace eForm.Controls
         const string ValidationDropDownListSelectValueList_Message = "Please select a data list.";
         const string ValidationDropDownListQueryStatement_Message = "Please write a query statement.";
         const string ValidationDateEnterMandatoryMessage_Message = "Please enter Mandatory message.";
+        const string ValidationNewTabMessage_Message = "Please select a tab.";
 
         const string ValidationDateHeightMessage_Message = "Please enter a date box height.";
         const string ValidationDateWidthMessage_Message = "Please enter a date box width.";
@@ -113,6 +114,7 @@ namespace eForm.Controls
         public string cssDragClass = string.Empty;
         public string AciveHidClient = string.Empty;
         private ArrayList SYSBuildinList = new ArrayList();
+        public bool IsStatDesign = false;
         // those default skin id are in "App_themes/default/Controls.skin
       
      
@@ -235,7 +237,27 @@ namespace eForm.Controls
 
         }
 
-       
+        private bool _IsDesignMode;
+        public  bool IsDesignMode
+        {
+            get
+            {
+                if (ViewState["IsDesignMode"] != null)
+                {
+                    _IsDesignMode = Convert.ToBoolean(ViewState["IsDesignMode"].ToString());
+                }
+                return _IsDesignMode;
+            }
+
+            set
+            {
+                ViewState["IsDesignMode"] = value;
+                _IsDesignMode = value;
+            }
+
+
+        }
+
         public int eFormID
         {
             get
@@ -369,6 +391,7 @@ namespace eForm.Controls
             { 
                 // Translaition
                 Translation();
+                LoadDataList();
             }
             
             base.OnInit(e);
@@ -406,7 +429,7 @@ namespace eForm.Controls
 
             lblText.Text = GetString("Accourdion_Text", "Text Box");
             lblTextArea.Text = GetString("Accourdion_Text Area", "Text Area");
-            lblMoney.Text = GetString("Accourdion_lblMoney", "lblMoney");
+            lblMoney.Text = GetString("Accourdion_lblMoneyTextBox", "Money");
             lblReadOnly.Text = GetString("Accourdion_lblReadOnly", "lblReadOnly");
 
             lblMSG.Text = GetString("Accourdion_Message", "Message");
@@ -457,12 +480,32 @@ namespace eForm.Controls
             if (!IsPostBack)
             {
                 IniForm();
+                this.bntSaveAllFields.Enabled = true;
                 this.bntAdd.Enabled = false;
+               
+            }
+
+            if (eFormID == 0)
+            {
+                TabContainer1.Tabs[1].Enabled = false;
+                if (IsStatDesign)
+                {
+                    IniForm();
+                    IsStatDesign = false;
+                }
+            }
+            else
+            {
+                if (!IsDesignMode)
+                {
+                    IniForm();
+                }
+                TabContainer1.Tabs[1].Enabled = true; 
             }
             accordionFormDesign.Visible = true; 
             SetClientScript();
 
-
+        
 
           
         }
@@ -496,7 +539,7 @@ namespace eForm.Controls
 
             //Make sure form name is uqi 
             Pelesys.Scheduling.DesignForm eform = Pelesys.Scheduling.DesignForm.GetDataByName(txtFormName.Text);
-            if (eform != null)
+            if (eform != null && eFormID ==0)
             {
 
                 string msg = ValidationFormNameExist_Message;
@@ -588,7 +631,7 @@ namespace eForm.Controls
 
                 }
 
-                if (chkWithLabel.Checked && txtContent.Text != string.Empty )
+                if (chkWithLabel.Checked && txtContent.Text == string.Empty )
                 {
                     string msg = ValidationLinkLabelContent_Message;
                     Guid oguid = new Guid();
@@ -894,7 +937,9 @@ namespace eForm.Controls
                 return;
             }
 
-           SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty  : ddlCurrentTab.SelectedValue);
+         //  SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty  : ddlCurrentTab.SelectedValue);
+           SetAllPositions();
+            
             if (!IsValidNewTab())
             {
                 return;
@@ -953,7 +998,10 @@ namespace eForm.Controls
             if (eFormID == 0)
             {
                 DesignForm oForm = new DesignForm();
-                oForm.Name = this.txtFormName.Text;
+                if (this.txtFormName.Text != string.Empty)
+                {
+                    oForm.Name = this.txtFormName.Text;
+                }
                 oForm.ApplicaitonID = 4;
                 oForm.Type = 1; // Resource type in design form table
                 DesignForm.Save<DesignForm>(oForm);
@@ -980,7 +1028,8 @@ namespace eForm.Controls
 
         protected void TabAdd(object sender, EventArgs e)
         {
-            SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty : ddlCurrentTab.SelectedValue);
+          //  SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty : ddlCurrentTab.SelectedValue);
+            SetAllPositions();
             if (eFormID > 0)
             {
                 if (!IsValidNewTab())
@@ -1031,10 +1080,20 @@ namespace eForm.Controls
                 this.bntAdd.Enabled = false;
                 this.IsTabChanged = true;
                 string msg = Action_TabAdd_Message; // "A new tab was added sucessfully. Thank you!";
-            
+                TabContainer1.Tabs[1].Enabled = true;
                Guid oguid = new Guid();
               ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "callBoxFancy('eFormSucessStatus','" + msg + "');", true);
               //  this.jsfunction.Text = "<script>callBoxFancy('" + this.lblStatusMsg.ClientID + "','"+ lblStatusMsg.Text +"');</script>";
+
+              if (this.ddlCurrentTab.SelectedValue != "-1")
+              {
+
+                  this.bntFieldAdd.Enabled = true;
+              }
+              else
+              {
+                  this.bntFieldAdd.Enabled = false; 
+              }
                
             }
 
@@ -1044,8 +1103,8 @@ namespace eForm.Controls
 
         protected void TabRemove(object sender, EventArgs e)
         {
-
-          ///  SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty  :ddlCurrentTab.SelectedValue);
+            SetAllPositions();
+            //SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty  :ddlCurrentTab.SelectedValue);
             if (lstTabList.SelectedValue != string.Empty)
             {
                 string msg = lstTabList.SelectedItem.Text + Action_TabDelete_Message;  // " tab was deleted sucessfully. Thank you!";
@@ -1098,7 +1157,8 @@ namespace eForm.Controls
 
         protected void FieldSave(object sender, EventArgs e)
         {
-            SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty  : ddlCurrentTab.SelectedValue);
+            SetAllPositions();
+            //SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty  : ddlCurrentTab.SelectedValue);
             accordionFormDesign.SelectedIndex = AccordingIndex;
             if (!IsAControlbeingSelected())
             {
@@ -1174,7 +1234,10 @@ namespace eForm.Controls
          //   oFormField.ControlSize = txtSize.Text;
             oFormField.Label = ExistingLabel;
 
-              DesignFormTab otab = DesignFormTab.Load<DesignFormTab>(ddlCurrentTab.SelectedValue);
+            DesignFormTab otab = DesignFormTab.GetDataBySysIdentity( eFormID, ddlCurrentTab.SelectedValue);
+
+
+
               TabPanel oPanel = CurrentTab.FindControl(otab.SysIdentity) as TabPanel;
               if (oPanel != null)
               {
@@ -1212,7 +1275,8 @@ namespace eForm.Controls
 
         protected void FieldAdd(object sender, EventArgs e)
         {
-            SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty  : ddlCurrentTab.SelectedValue);
+            SetAllPositions();
+           // SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty  : ddlCurrentTab.SelectedValue);
             if (!IsAControlbeingSelected())
             {
                 return;
@@ -1235,6 +1299,14 @@ namespace eForm.Controls
                 return;
             }
 
+
+            if (lstTabList.SelectedValue == "-1")
+            {
+                Guid oNewTab = new Guid();
+                ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oNewTab.ToString(), "callBoxFancy('eFormWarnStatus','" + ValidationNewTabMessage_Message + "');", true);
+                return;
+                
+            }
 
             // ini position
             string StartPos = "0";
@@ -1298,6 +1370,7 @@ namespace eForm.Controls
                     DesignForm oform = new DesignForm();
                     oform.Name = txtFormName.Text;
                     eFormName = txtFormName.Text;
+                    oform.Type = 1;
                     DesignForm.Save(oform);
                     eFormID = oform.FormID;
                 }
@@ -1310,28 +1383,40 @@ namespace eForm.Controls
                                    select o;
                     if (otablist != null && otablist.Count() > 0)
                     {
-                        DesignFormTab ofield = otablist.FirstOrDefault();
-                        if (ofield.FormTabID == 0)
-                        { 
+                        DesignFormTab 
+                        ofield = otablist.FirstOrDefault();
+                        if (ofield.FormID == 0)
+                        {
                             //check this tab name is not exist before with the same form 
-                            if (DesignFormTab.IsTabNameExist(eFormID, string.Empty, ofield.Name))
+                            if (!DesignFormTab.IsTabNameExist(eFormID, string.Empty, ofield.Name))
                             {
-                                string Tabmsg = ValidationTabNameAlreadyExist_Message;
-                                  Guid oTabguid = new Guid();
-                                  ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oTabguid.ToString(), "callBoxFancy('eFormWarnStatus','" + Tabmsg + "');", true);
-                                 return;
-                            
+                                //string Tabmsg = ValidationTabNameAlreadyExist_Message;
+                                //Guid oTabguid = new Guid();
+                                //ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oTabguid.ToString(), "callBoxFancy('eFormWarnStatus','" + Tabmsg + "');", true);
+                                //return;
+                                ofield.FormID = eFormID;
+                                DesignFormTab.Save<DesignFormTab>(ofield);
+                                // update tab list
+                                List<DesignFormTab> oNewList = DesignFormTab.GetDataBy(eFormID);
+                                Session[SessionTabList] = oNewList;
+                                oDesign.TabID = ofield.FormTabID;
+                                oDesign.FormID = eFormID;
+                                otab = ofield;
+
                             }
                             // save it to the database
+
+                          
+                        }
+                        else
+                        {
                            
-                            ofield.FormID = eFormID;
-                            DesignFormTab.Save<DesignFormTab>(ofield);
-                            // update tab list
-                             List<DesignFormTab> oNewList = DesignFormTab.GetDataBy(eFormID);
-                             Session[SessionTabList] = oNewList;
-                             oDesign.TabID = ofield.FormTabID;
-                             oDesign.FormID = eFormID;
-                             otab = ofield;
+                            List<DesignFormTab> oNewList = DesignFormTab.GetDataBy(eFormID);
+                            Session[SessionTabList] = oNewList;
+                            oDesign.TabID = ofield.FormTabID;
+                            oDesign.FormID = eFormID;
+                            otab = ofield;
+                        
                         }
                        
 
@@ -1435,13 +1520,27 @@ namespace eForm.Controls
             string sJavascript = "editbox_init()";
             ScriptManager.RegisterStartupScript(this.UpdatePanel1, GetType(), gMessage.ToString(), sJavascript, true);
             string msg = Action_FieldAdd_Message;
-            //CreateFormDesignScript("Main", UpdatePanel1, TabContainer1);
+            CreateFormDesignScript("Main", UpdatePanel1, TabContainer1);
             IsEnable = true;
             AccordingIndex = accordionFormDesign.SelectedIndex;
-            SetTab(lstTabList.SelectedValue);
+            string SelectedValue = string.Empty;
+            if (lstTabList.SelectedValue == string.Empty)
+            {
+                SelectedValue = lstTabList.Items[0].Value;
+            }
+            else
+            {
+                SelectedValue = lstTabList.SelectedValue;
+            }
+            SetTab(SelectedValue);
 
+            if (ddlFields.SelectedValue != "-1")
+            {
+                bntFieldDelete.Enabled = true;
+            }
 
-            this.ddlCurrentTab.SelectedValue = lstTabList.SelectedValue;
+            this.ddlCurrentTab.SelectedValue =SelectedValue;
+            TabContainer1.Tabs[1].Enabled = true;
             bntSaveAllFields.Enabled = true;
             Guid oguid = new Guid();
             ScriptManager.RegisterStartupScript(UpdatePanel1, this.GetType(), oguid.ToString(), "callBoxFancy('eFormSucessStatus','" + msg + "');", true);
@@ -1450,7 +1549,8 @@ namespace eForm.Controls
 
         protected void FieldRemove(object sender, EventArgs e)
         {
-            SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty : ddlCurrentTab.SelectedValue);
+            SetAllPositions();
+            //SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty : ddlCurrentTab.SelectedValue);
             if (!IsAControlbeingSelected())
             {
                 return;
@@ -1459,7 +1559,7 @@ namespace eForm.Controls
             if (oFormField != null)
             {   
                 //Remove field from db schema
-                DesignFormField.DeleteColumnFromDBTable(DBTableName, oFormField.Name);
+              //  DesignFormField.DeleteColumnFromDBTable(DBTableName, oFormField.Name);
 
                 DesignFormField.FinalDelete<DesignFormField>(oFormField );
                 LoadFieldDetail();
@@ -1553,7 +1653,7 @@ namespace eForm.Controls
             oFormField.Width = Convert.ToInt16(this.txtWidth.Text);
             oFormField.Height = Convert.ToInt16(this.txtHeight.Text);
             oFormField.CanEnlarge = chkEnlarg.Checked == true ? true : false;
-            oImageControl = (ucImageControl)LoadControl("~/Controls/ucImageControl.ascx");
+            oImageControl = (ucImageControl)LoadControl("~/Control/ucImageControl.ascx");
 
             oImageControl.EnlargeImageClientID = this.EnlargeImageClientID;
 
@@ -1621,7 +1721,7 @@ namespace eForm.Controls
             oDesign.Width = Convert.ToInt16( this.txtWidth.Text);
             oDesign.Height = Convert.ToInt16(this.txtHeight.Text);
             oDesign.CanEnlarge = chkEnlarg.Checked == true ? true : false;
-            oImageControl = (ucImageControl)LoadControl("~/Controls/ucImageControl.ascx");
+            oImageControl = (ucImageControl)LoadControl("~/Control/ucImageControl.ascx");
 
             oImageControl.EnlargeImageClientID = this.EnlargeImageClientID;
             
@@ -1975,7 +2075,7 @@ namespace eForm.Controls
             if (radValueList.Checked)
             {
                 oFormField.IsDataList = true;
-                oFormField.DataListTypeID = Convert.ToInt32( ddlValueList.SelectedItem.Value);
+                oFormField.DataListType =  ddlValueList.SelectedItem.Value;
 
             }
             else
@@ -2016,8 +2116,8 @@ namespace eForm.Controls
             if (radValueList.Checked)
             {
                 oDesign.IsDataList = true;
-                //oDesign.Datalist = ddlValueList.SelectedValue;
-                oFormField.DataListTypeID = Convert.ToInt32(ddlValueList.SelectedItem.Value);
+                oDesign.DataListType = ddlValueList.SelectedValue;
+                oFormField.DataListType = ddlValueList.SelectedItem.Value;
             }
             else
             {
@@ -2141,21 +2241,24 @@ namespace eForm.Controls
 
                         if (sLabel != string.Empty)
                         {
-                            SQL = @"Update RSMS.eFormField Set LabelLeft=" + sLeft + ", LabelTop = " + sTop
+                            SQL = @"Update sch.DesignFormField Set LabelLeft=" + sLeft + ", LabelTop = " + sTop
                         + ", label ='" + sLabel + "'  "
                     + " Where Name ='" + ctrID + "' and FormID =" + eFormID ;
                         }
                     }
                     else
                     {
-                        SQL = @"Update RSMS.eFormField Set ControlLeft=" + sLeft + ", controlTop = " + sTop
+                        SQL = @"Update sch.DesignFormField Set ControlLeft=" + sLeft + ", controlTop = " + sTop
                            + " Where Name ='" + ctrID + "' and FormID =" + eFormID;
                     }
 
                     if (SQL != string.Empty)
                     {
                         DesignFormField.UpdateFormDesignPosition(SQL);
+                       
                     }
+
+                     
                 }
                 // Console.WriteLine(word);
             }
@@ -2165,10 +2268,23 @@ namespace eForm.Controls
 
         #endregion 
 
+        protected void SetAllPositions()
+        {
+            foreach ( ListItem oitem in lstTabList.Items  )
+            {
+                string sTabName = ddlCurrentTab.SelectedValue;
+                if ( oitem.Value !="-1")
+                {
+                SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty : ddlCurrentTab.SelectedValue);
+                }
+            }
 
+            IsEnable = true;
+        }
 
         protected void TabList_OnSelectedIndexChanged(object sender, EventArgs e)
         {
+            SetAllPositions();
             ActiveType = 0;
             if (this.lstTabList.SelectedValue != string.Empty)
             {
@@ -2185,9 +2301,12 @@ namespace eForm.Controls
 
                 this.ddlCurrentTab.SelectedValue = lstTabList.SelectedValue;
                 ActiveType = 1;
-                LoadFieldDetail();
-                SetAllFields();
-
+               // LoadFieldDetail();
+              //  SetAllFields();
+                foreach ( ListItem oItem in lstTabList.Items)
+                {
+                       //   SetField(oItem.Value, eFormID);
+                 }
                 if (lstTabList.SelectedIndex > 1)
                 {
                     this.bntDelete.Enabled = true; 
@@ -2196,15 +2315,23 @@ namespace eForm.Controls
                 {
                     this.bntDelete.Enabled = false;
                 }
-                if (lstTabList.SelectedValue == "-1" )
+                if (lstTabList.SelectedValue == "-1")
                 {
 
                     this.bntDelete.Enabled = false;
                 }
-
+                else
+                {
+                    this.bntFieldAdd.Enabled = true; 
+                }
             }
 
-         
+            if (lstTabList.SelectedValue == "-1")
+            {
+                bntFieldAdd.Enabled = false;
+                bntFieldDelete.Enabled = false;
+                bntSaveAllFields.Enabled = false;
+            }
         
         }
 
@@ -2303,12 +2430,29 @@ namespace eForm.Controls
          //Get tab first
             if (this.ddlCurrentTab.SelectedValue != string.Empty)
             {
-                SetField(this.ddlCurrentTab.SelectedValue, 0);
+                SetField(this.ddlCurrentTab.SelectedValue, eFormID);
             }
             // no tab then get all fields by form id
             else
             {
                 SetField(String.Empty, eFormID);
+            }
+
+            if (this.ddlCurrentTab.SelectedValue == "-1")
+            {
+                bntFieldAdd.Enabled = false;
+                bntSaveAllFields.Enabled = false;
+                bntFieldDelete.Enabled = false;
+                ddlFields.SelectedIndex = 0;
+
+            }
+            else
+            {
+               // bntFieldAdd.Enabled = true ;
+               // bntSaveAllFields.Enabled = true;
+               // bntFieldDelete.Enabled = true;
+
+                
             }
 
             this.hidFieldID.Value = ddlFields.SelectedValue;
@@ -2318,12 +2462,14 @@ namespace eForm.Controls
 
         protected void Fields_OnSelectedIndexChanged(object sender, EventArgs e)
         {
+            SetAllPositions();
             SetAllFields();
             
         }
 
         protected void CurrentTab_OnSelectedIndexChanged(object sender, EventArgs e)
         {
+            SetAllPositions();
             ActiveType = 1;
             LoadFieldDetail();
             SetAllFields();
@@ -2331,6 +2477,7 @@ namespace eForm.Controls
 
         protected void SetField( string TabIdentifier  , int FormID)
         {
+           // SetControlPosition(ddlCurrentTab.SelectedValue == string.Empty ? string.Empty : ddlCurrentTab.SelectedValue);
           //  bntFieldAdd.Enabled = false;
             bntFieldDelete.Enabled = true;
             DesignFormField oEForm = new DesignFormField();
@@ -2384,7 +2531,7 @@ namespace eForm.Controls
         protected void IniTextBox()
         {
 
-            FieldConstrol oField = DesignFormField.GetLabelName(DBTableName);
+            FieldConstrol oField = DesignFormField.GetLabelName(DBTableName,  Convert.ToInt32(  eFormID) );
             txtTextBoxName.Text = oField.ControlName;
             txtLabelName.Text = oField.LableName;
             chkFieldEnabled.Checked = true;
@@ -2392,15 +2539,15 @@ namespace eForm.Controls
             LoadDataList();
             txtSkin.Text = string.Empty;
             this.accordionFormDesign.SelectedIndex = 0;
-            txtboxHeight.Text = "25";
-            txtboxWidth.Text = "160";
+         //   txtboxHeight.Text = "25";
+         //   txtboxWidth.Text = "160";
          //   txtSize.Text = "255";
             ChkReadOnly.Checked =false;
             chkMandatory.Checked =  false;
             txtMSG.Text = string.Empty;
-            this.radText.Checked = true;
-            this.radTextArea.Checked = false;
-            this.radMoney.Checked = false;
+            //this.radText.Checked = true;
+            //this.radTextArea.Checked = false;
+            //this.radMoney.Checked = false;
         
         }
 
@@ -2415,7 +2562,7 @@ namespace eForm.Controls
             txtSkin.Text = offield.SkinID == null ? string.Empty:  offield.SkinID;
             chkFieldEnabled.Checked = offield.IsEnabled == true  ? true : false;
             chkFieldVisible.Checked = offield.IsVisible == true  ? true : false;
-            LoadDataList();
+           
             bntFieldDelete.Enabled = true;
             hidFieldID.Value = offield.FieldID.ToString();
 
@@ -2469,7 +2616,7 @@ namespace eForm.Controls
 
             DataTable oDB = DesignFormDataList.GetAllDataListCategory();
             this.ddlValueList.DataTextField = "Category";
-            this.ddlValueList.DataValueField = "Type";
+            this.ddlValueList.DataValueField = "Category";
             ddlValueList.DataSource = oDB;
             ddlValueList.DataBind();
         
@@ -2502,8 +2649,14 @@ namespace eForm.Controls
             AccordionPane oPane = accordionFormDesign.Panes[this.accordionFormDesign.SelectedIndex];
            
             oPane.Enabled = true;
-            txtboxHeight.Text = offield.Height.ToString();
-            txtboxWidth.Text = offield.Width.ToString();
+            if (offield.Height.ToString() != string.Empty)
+            {
+                txtboxHeight.Text = offield.Height.ToString();
+            }
+            if (offield.Width.ToString() != string.Empty)
+            {
+                txtboxWidth.Text = offield.Width.ToString();
+            }
            // txtSize.Text = offield.ControlSize == null ? string.Empty : offield.ControlSize;
             ChkReadOnly.Checked = offield.IsReadOnly == true ? true : false;
             chkMandatory.Checked = offield.IsMandatory == true ? true : false;
@@ -2534,7 +2687,7 @@ namespace eForm.Controls
                 pnlList.Visible = true;
                 if ( ddlValueList.Items.Count >0)
                 {
-                    ddlValueList.SelectedValue = offield.DataListTypeID.ToString();
+                    ddlValueList.SelectedValue = offield.DataListType.ToString();
                 }
 
               }
@@ -2556,8 +2709,14 @@ namespace eForm.Controls
             AccordionPane oPane = accordionFormDesign.Panes[this.accordionFormDesign.SelectedIndex];
           
             oPane.Enabled = true;
-            txtboxHeight.Text = offield.Height.ToString();
-            txtboxWidth.Text = offield.Width.ToString();
+            if (offield.Height.ToString() != string.Empty)
+            {
+                txtboxHeight.Text = offield.Height.ToString();
+            }
+            if (offield.Width.ToString() != string.Empty)
+            {
+                txtboxWidth.Text = offield.Width.ToString();
+            }
           //  txtSize.Text = offield.ControlSize == null ? offield.ControlSize : string.Empty;
             ChkReadOnly.Checked = offield.IsReadOnly == true ? true : false;
             chkMandatory.Checked = offield.IsMandatory == true ? true : false;
@@ -2720,6 +2879,7 @@ namespace eForm.Controls
                     
         protected void OnFieldSwitchQueryAndListCheckChanged(object sender, EventArgs e)
         {
+            SetAllPositions();
             SwitchBetweenQueryStatementAndList();
 
         }
@@ -2727,19 +2887,21 @@ namespace eForm.Controls
 
         protected void OnWithLabelCheckChanged(object sender, EventArgs e)
         {
+            SetAllPositions();
             this.txtContent.Enabled = chkWithLabel.Checked == false ? false : true;
 
         }
 
         protected void OnFieldMandatoryCheckChanged(object sender, EventArgs e)
         {
+            SetAllPositions();
             EnabledTextBoxManatory();
 
         }
 
         protected void OnFieldDDLMandatoryCheckChanged(object sender, EventArgs e)
         {
-
+            SetAllPositions();
             EnabledDDLManatory();
         }
 
@@ -2749,12 +2911,31 @@ namespace eForm.Controls
 
         protected override void OnPreRender(EventArgs e)
         {
-            txtFormName.Text = eFormName;
+
+            if (eFormID == 0)
+            {
+               
+                if (IsStatDesign)
+                {
+                    IniForm();
+                    IsStatDesign = false;
+                }
+            }
+            if (eFormName != string.Empty)
+            {
+                txtFormName.Text = eFormName;
+            }
            ActiveTab(ActiveType);
             base.OnPreRender(e);
         }
         protected void IniForm()
         {
+            txtboxHeight.Text = "22";
+            txtboxWidth.Text = "160";
+            txtHeight.Text = "24";
+            txtWidth.Text = "24";
+            txtDateHeight.Text = "22";
+            txtDateWidth.Text = "180";
             bntDelete.Enabled = false;
             ActiveType = 0;
             //figout out tab should show or not
@@ -2819,7 +3000,19 @@ namespace eForm.Controls
             this.bntFieldDelete.Attributes.Add("onclick", "if ( IsDeleteConfirm('" + MSG + "')==true) {return true;} else { return false;}");
             this.bntSaveAllFields.Attributes.Add("onclick", "  GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' );");
             this.bntFieldDelete.Attributes.Add("onclick", "  GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' );if ( IsDeleteConfirm('" + MSG + "')==true) {return true;} else { return false;}");
-           // this.bntFieldAdd.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+            this.bntFieldAdd.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+            this.bntAdd.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+            this.lstTabList.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+
+            this.ddlCurrentTab.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+            this.ddlFields.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+            this.chkMandatory.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+            this.radSQLStatement.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+            this.radValueList.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+            this.chkddlMandatory.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+
+            this.chkWithLabel.Attributes.Add("onclick", " GetAllControlPositionAndLabelText( '" + this.hidControlList.ClientID + "', '" + this.hidLabelList.ClientID + "' ); ");
+          
         }
 
        public  void LoadTabs(bool IsIni)
@@ -2837,7 +3030,21 @@ namespace eForm.Controls
 
                     //Does not find any exsting tab in db
                     //Figur out currnet tabs
-                    if (CurrentTab != null)
+                    if (Session[SessionTabList] != null)
+                    {
+                        List<DesignFormTab> oList = Session[SessionTabList] as List<DesignFormTab>;
+                        foreach (DesignFormTab oTab in oList)
+                        {
+                            if (oTab.IsSysUse == false && oTab.Name != string.Empty  )
+                            {
+                                lstTabList.Items.Add(new ListItem(oTab.Name, oTab.SysIdentity));
+                            }
+                           
+                        }
+                        lstTabList.Items.Add(new ListItem("New...", "-1"));
+                        Session[SessionTabList] = oList;
+                    }
+                    else if (CurrentTab != null)
                     {
                         List<DesignFormTab> oTabList = new List<Pelesys.Scheduling.DesignFormTab>();
                         int count = 0;
@@ -2847,10 +3054,19 @@ namespace eForm.Controls
                             DesignFormTab oTab = new DesignFormTab();
                             Guid gNewidentifier = Guid.NewGuid();
                             oTab.Name = otp.HeaderText;
-                            oTab.SysIdentity = gNewidentifier.ToString();
-                            otp.ID = gNewidentifier.ToString();
-                            oTab.IsVisible = true;
-                            oTab.IsEnabled = true;
+                            if (otp.ID.ToLower() == "tabs")
+                            {
+                                oTab.SysIdentity = gNewidentifier.ToString();
+                                otp.ID =otp.ID.ToLower().ToString();
+                            }
+                            else
+                            {
+                                oTab.SysIdentity = otp.ID;
+
+                            }
+                         
+                            oTab.IsVisible = this.chkActive.Checked;
+                            oTab.IsEnabled = this.chkVisible.Checked;
                             if (count == 0)
                             {
 
@@ -2862,16 +3078,19 @@ namespace eForm.Controls
                                 oTab.IsSysUse = false;
                             }
                             oTab.Sequence = count;
-                            lstTabList.Items.Add(new ListItem(oTab.Name, oTab.SysIdentity));
-                            oTabList.Add(oTab);
+                            if (oTab.Name.ToLower() != "")
+                            {
+                                lstTabList.Items.Add(new ListItem(oTab.Name, oTab.SysIdentity));
+                                oTabList.Add(oTab);
+                            }
                             count++;
                         }
 
                         Session[SessionTabList] = oTabList;
 
                     }
-                    lstTabList.Items.RemoveAt(0);
-                    lstTabList.Items.Add(new ListItem("New...", "-1"));
+                  //  lstTabList.Items.RemoveAt(0);
+                  //  lstTabList.Items.Add(new ListItem("New...", "-1"));
                 }
                 else
                 {
@@ -2897,12 +3116,15 @@ namespace eForm.Controls
                    List<DesignFormTab> oList = Session[SessionTabList]  as List<DesignFormTab>;
                    foreach (DesignFormTab oTab in oList)
                    {
-                       lstTabList.Items.Add(new ListItem(oTab.Name, oTab.SysIdentity));
+                       if (oTab.IsSysUse == false)
+                       {
+                           lstTabList.Items.Add(new ListItem(oTab.Name, oTab.SysIdentity));
+                       }
                    }
                    lstTabList.Items.Add(new ListItem("New...", "-1"));
                 }
 
-            
+              
             }
             LoadFieldTab();
 
@@ -2963,14 +3185,22 @@ namespace eForm.Controls
             //ddlCurrentTab.DataSource = Pelesys.Scheduling.DesignFormTab.GetDataBy(eFormID);
             //ddlCurrentTab.DataBind();
             List<DesignFormTab> oList = Session[SessionTabList] as List<DesignFormTab>;
+            bool IsProfileTabExist = false;
             foreach (DesignFormTab otab in oList)
             {
+                if (otab.Name.ToLower() == "profile")
+                {
+                    IsProfileTabExist = true;
+                }
                 ddlCurrentTab.Items.Add( new ListItem(otab.Name, otab.SysIdentity  ));
             }
 
             //profile tab was disabled so first profile tab item in this
             // drop down list should removed
-            ddlCurrentTab.Items.RemoveAt(0);
+            if (IsProfileTabExist)
+            {
+                ddlCurrentTab.Items.RemoveAt(0);
+            }
             ddlCurrentTab.Items.Add(new ListItem("New...", "-1"));
         }
 
@@ -2982,7 +3212,7 @@ namespace eForm.Controls
                
                 //Load fields according to tab id
                 this.ddlFields.DataTextField = "Name";
-                this.ddlFields.DataValueField = "eFormFieldID";
+                this.ddlFields.DataValueField = "FieldID";
                 ddlFields.DataSource = DesignFormField.GetDataBy(ddlCurrentTab.SelectedValue, eFormID);
                 ddlFields.DataBind();
             }
@@ -2990,7 +3220,7 @@ namespace eForm.Controls
             {
                 //Load fields by form id
                 this.ddlFields.DataTextField = "Name";
-                this.ddlFields.DataValueField = "eFormFieldID";
+                this.ddlFields.DataValueField = "FieldID";
                 ddlFields.DataSource = DesignFormField.GetDataByeFormID(eFormID);
                 ddlFields.DataBind();
             }
@@ -3045,8 +3275,8 @@ namespace eForm.Controls
             //Load date format
             this.ddlCalendarFormat.DataTextField = "Format";
             this.ddlCalendarFormat.DataValueField = "DateFormatID";
-          //  ddlCalendarFormat.DataSource = DateFormat.GetDateFormat(CultureID);
-         //   ddlCalendarFormat.DataBind();
+            ddlCalendarFormat.DataSource =  Pelesys.Scheduling.DateFormat.GetDateFormat(CultureID);
+             ddlCalendarFormat.DataBind();
         }
 
         protected void SwitchBetweenQueryStatementAndList()

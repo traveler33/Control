@@ -4,6 +4,8 @@
 <%@ Reference Control="~/Control/ucImageControl.ascx" %>
 <div id="e-FormTabs" class="EFormDesignPanel">
     <script type="text/javascript">
+     
+  
 	    $(document).ready(function () {
 	       
 	        $("#statusBox").fancybox({
@@ -34,7 +36,7 @@
        
     }
 
-
+ 
     </script>
     <table width="100%" style="height: 100%; z-index: 999;" border="0" cellpadding="1"
         cellspacing="1" class="detailEdit">
@@ -58,7 +60,8 @@
 
                                                             </th>
                                                             <td>
-                                                                     <asp:TextBox ID="txtFormName" runat="server" MaxLength="20" SkinID="eFormTextBox"  Width="180px"></asp:TextBox>
+                                                                    
+                                                                             <asp:TextBox ID="txtFormName"  runat="server" MaxLength="20" SkinID="eFormTextBox"  Width="180px" EnableViewState ="true"      ></asp:TextBox>
                                                                     
                                                             </td>
                                                         </tr>
@@ -77,12 +80,14 @@
                                             </tr>
                                             <tr>
                                                 <td align="center">
-                                                    <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                                                    <asp:UpdatePanel ID="UpdatePanel2" runat="server"     >
                                                         <ContentTemplate>
+
                                                            <asp:ListBox ID="lstTabList" runat="server" SkinID="eFormList" Width="280px" Height="210px"
                                                         AutoPostBack="True" OnSelectedIndexChanged="TabList_OnSelectedIndexChanged">
                                                     </asp:ListBox>
-                                                        
+                                                    
+                                                            
                                                         </ContentTemplate>
                                                     </asp:UpdatePanel>
 
@@ -337,7 +342,7 @@
                                                                                                 <th colspan="2">
                                                                                                     <asp:Label ID="lblValueLists" runat="server" SkinID="label" Text="List"></asp:Label>
                                                                                                 </th>
-                                                                                                <td colspan="2">
+                                                                                                <td colspan="2"  valign="top"  >
                                                                                                     &nbsp;&nbsp;<asp:DropDownList ID="ddlValueList" runat="server" SkinID="eFormEditModeDropDownList">
                                                                                                     </asp:DropDownList>
                                                                                                 </td>

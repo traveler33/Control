@@ -10,6 +10,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
+using System.Text;
 
 using AjaxControlToolkit;
 
@@ -82,10 +83,11 @@ namespace eForm.Controls
 
         public string AppUploadFilePath = "AppUpload";
 
+       
         protected override void OnInit(EventArgs e)
         {
             UploadTooptip = "Image";
-            UploadIcon = "/Image/redx33.gif";
+            UploadIcon = "/Images/redx33.gif";
            
             UploadIcon = UploadIcon.Replace("~/", string.Empty);
                sHeight = Height.ToString();
@@ -97,7 +99,7 @@ namespace eForm.Controls
             if (ImagePath == string.Empty)
             {
 
-                ImagePath = "~/Image/Photo.jpg";
+                ImagePath = "/images/Photo.jpg";
                 //this.ImagePath = this.ImgLoad.ImageUrl;
             }
             else
@@ -207,11 +209,71 @@ namespace eForm.Controls
         
         }
 
+         protected void CreateJSFunction()
+        {
+            string script = "function EformOpenImageEnLarge(CliendID) {$('#EnlargeImage').trigger('click');}";
+          //  ScriptManager.RegisterStartupScript(Page, typeof(Page), "script2", script, true);
+
+            Guid oNewScript = new Guid();
+
+            //string script = "function updateClick() { return confirm('Are you sure you want to select?'); }";  
+            ScriptManager.RegisterStartupScript(Page, typeof(Page), oNewScript.ToString(), script.ToString(), true);
+
+            StringBuilder script1 = new StringBuilder();
+            script1.Append("  $(document).ready(function () {");
+            script1.Append(" $('#" + this.ClientID+" ').fancybox({");
+
+         
+            script1.Append("  'overlayShow': true,");
+            script1.Append(" 'transitionIn': 'elastic',");
+            script1.Append(" 'transitionOut': 'elastic',");
+
+            script1.Append(" 'padding': 0,");
+            script1.Append(" 'zoomOpacity': true,");
+            script1.Append("  'zoomSpeedIn': 500,");
+            script1.Append("  'zoomSpeedOut': 500,");
+              script1.Append("  });");
+              script1.Append("  });");
+            Guid oNewScript1 = new Guid();
+
+            //string script = "function updateClick() { return confirm('Are you sure you want to select?'); }";  
+          //  ScriptManager.RegisterStartupScript(Page, typeof(Page), oNewScript1.ToString(), script1.ToString(), true);
+
+         
+
+               StringBuilder script2 = new StringBuilder();
+            script2.Append("  $(document).ready(function () {");
+            script2.Append(" $('#UploadFile" + this.ClientID+" ').fancybox({");
+
+         
+            script2.Append("  'overlayShow': true,");
+            script2.Append(" 'transitionIn': 'elastic',");
+            script2.Append(" 'transitionOut': 'elastic',");
+              script2.Append("   'width': 600, ");
+              script2.Append("  'height': 142, ");
+
+            script2.Append(" 'padding': 6,");
+            script2.Append(" 'zoomOpacity': true,");
+            script2.Append("  'zoomSpeedIn': 500,");
+            script2.Append("  'zoomSpeedOut': 500,");
+                script2.Append("'type': 'iframe' ");
+              script2.Append("  });");
+              script2.Append("  });");
+            Guid oNewScript2 = new Guid();
+
+            //string script = "function updateClick() { return confirm('Are you sure you want to select?'); }";  
+            ScriptManager.RegisterStartupScript(Page, typeof(Page), oNewScript2.ToString(), script2.ToString(), true);
+
+        }
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
 
-
+            //if (!IsPostBack)
+            {
+                CreateJSFunction();
+            }
         }
 
     }
