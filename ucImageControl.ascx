@@ -8,7 +8,7 @@
     <table border="0" cellpadding="1" cellspacing="1">
         <tr>
             <td align="right">
-                <img id="ImageLoad<%= this.ClientID %>" height="<%=this.sHeight %>" width="<%=this.sWidth %>"
+                <img id="ImageLoad<%= this.ClientID %>"      height="<%=this.sHeight %>" width="<%=this.sWidth %>"
                      alt="<%=this.UploadToolTip %>" onclick="EformOpenImageEnLarge('<%=this.ClientID %>'); return false "
                     src="<%=this.ImagePath %>" style="border-width: 0px; cursor: hand;" />
             </td>
@@ -28,9 +28,12 @@
 </div>
 <a id="EnlargeImage" href="#eformEnlargeImage<%= this.ClientID %>" title="" style="display: none;">
     Inline</a>
-<div style="display: none;">
+<div style="display: none; width:600px; height:500px;">
     <div id="eformEnlargeImage<%= this.ClientID %>" style="overflow: auto; padding: 1px; background-color: black;
         max-height: 600px; max-width: 1000px;">
-        <asp:Image ID="ImageEnlarge" runat="server" />
+     
+         <img id="Img2" alt="<%=UploadTooptip %>" src="<%=this.ImagePath %>" style="border-width: 0px;
+                             />
+        <asp:Image ID="ImageEnlarge" runat="server" ImageUrl="~/<%=this.ImagePath %>" />
     </div>
 </div>

@@ -140,7 +140,22 @@ namespace eForm.Controls
         {
             if (Session[FormDesign.SessionImageList] != null)
             { 
-            
+              oImageList = Session[FormDesign.SessionImageList] as Hashtable;
+              foreach (object sKey in oImageList.Keys)
+              {
+                  if (!oImageList.ContainsKey(this.ClientID))
+                  {
+                      
+                      Pelesys.Scheduling.DesignFormField oDesign = oImageList[sKey] as Pelesys.Scheduling.DesignFormField;
+                      if ( oDesign.ImagePath != null && oDesign.ImagePath != string.Empty )
+                      {
+                    //  oImageList.Add(this.ClientID, this.HidImagePath.Value);
+                      this.ImagePath = oDesign.ImagePath;
+                      }
+                  //    Session[ImageList] = oImageList;
+                      break;
+                  }
+              }
             }
 
             if (Session[ImageList] == null)

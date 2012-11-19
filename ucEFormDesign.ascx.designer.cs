@@ -580,6 +580,15 @@ namespace eForm.Controls {
         protected global::System.Web.UI.WebControls.TextBox txtMSG;
         
         /// <summary>
+        /// bntAddTextBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button bntAddTextBox;
+        
+        /// <summary>
         /// DropDownList control.
         /// </summary>
         /// <remarks>
@@ -697,6 +706,15 @@ namespace eForm.Controls {
         protected global::System.Web.UI.WebControls.DropDownList ddlValueList;
         
         /// <summary>
+        /// bntAddDropDown control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button bntAddDropDown;
+        
+        /// <summary>
         /// CheckBox control.
         /// </summary>
         /// <remarks>
@@ -731,6 +749,15 @@ namespace eForm.Controls {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkChecked;
+        
+        /// <summary>
+        /// bntAddCheckBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button bntAddCheckBox;
         
         /// <summary>
         /// DateCalendar control.
@@ -868,6 +895,15 @@ namespace eForm.Controls {
         protected global::System.Web.UI.WebControls.TextBox txtDateWidth;
         
         /// <summary>
+        /// bntAddDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button bntAddDate;
+        
+        /// <summary>
         /// Image control.
         /// </summary>
         /// <remarks>
@@ -956,6 +992,15 @@ namespace eForm.Controls {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkImageWithLabel;
+        
+        /// <summary>
+        /// bntAddImage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button bntAddImage;
         
         /// <summary>
         /// Hyperlink control.
@@ -1073,6 +1118,15 @@ namespace eForm.Controls {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtContent;
+        
+        /// <summary>
+        /// bntAddURL control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button bntAddURL;
         
         /// <summary>
         /// bntFieldAdd control.

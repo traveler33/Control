@@ -195,14 +195,14 @@
                                                 </th>
                                                 <td>
                                                     <asp:DropDownList ID="ddlFields" runat="server"  SkinID="eFormDropDownList"  Width="200px"
-                                                        AutoPostBack="true" OnSelectedIndexChanged="Fields_OnSelectedIndexChanged">
+                                                        OnSelectedIndexChanged="Fields_OnSelectedIndexChanged">
                                                     </asp:DropDownList>
                                                 </td>
                                             </tr>
-                                            <th>
-                                                <asp:Label ID="lblTextBoxName" runat="server" SkinID="label" Text="Name" ToolTip="Field Name"  ></asp:Label>
+                                            <th style="  display: none;  ">
+                                                <asp:Label ID="lblTextBoxName" runat="server" SkinID="label" Text="Name" ToolTip="Field Name"   ></asp:Label>
                                             </th>
-                                            <td>
+                                            <td  style="display:none;">
                                                 <asp:TextBox ID="txtTextBoxName" runat="server" MaxLength="100" SkinID="eFormMidTextBox"></asp:TextBox>
                                             </td>
         </tr>
@@ -253,6 +253,7 @@
                                                                 <asp:AccordionPane ID="TextBox" HeaderCssClass="cssFormDesignAccordionHead" HeaderSelectedCssClass="cssFormDesignSelectedHead"
                                                                     ContentCssClass="cssFormDesignAccordionContent" runat="server" ToolTip="Text Box">
                                                                     <Header>
+                                                                       
                                                                         <asp:Label ID="lblFormTextBox" runat="server" SkinID="label" Text="Text Box"></asp:Label>
                                                                     </Header>
                                                                     <Content>
@@ -260,7 +261,7 @@
                                                                           
                                                                             <tr>
                                                                                 <th colspan="2">
-                                                                                    <asp:Label ID="lbltxtHeight" runat="server" SkinID="label" Text="Height(px)"></asp:Label>
+                                                                                   <asp:Label ID="lbltxtHeight" runat="server" SkinID="label" Text="Height(px)"></asp:Label>
                                                                                     <asp:TextBox ID="txtboxHeight" runat="server" MaxLength="100" SkinID="eFormTextBoxShort"></asp:TextBox>
                                                                                     <asp:Label ID="lbltxtboxWidth" runat="server" SkinID="label" Text="Width(px)"></asp:Label>
                                                                                     <asp:TextBox ID="txtboxWidth" runat="server" MaxLength="100" SkinID="eFormTextBoxShort"></asp:TextBox>
@@ -292,6 +293,13 @@
                                                                                     <asp:TextBox ID="txtMSG" runat="server" TextMode="MultiLine" CssClass="TextAreaBoxOnDropDownList"
                                                                                         SkinID="TextBox" Height="20px" Width="170px"></asp:TextBox>
                                                                                 </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td colspan="2" align="left"  >
+                                                                                
+                                                                                     <asp:Button  ID="bntAddTextBox" runat="server"   onclick="FieldAdd"  Text="+"  cssclass="ShortButton" tooltip="Add Text Box" ></asp:Button>
+                                                                                </td>
+                                                                            
                                                                             </tr>
                                                                         </table>
                                                                     </Content>
@@ -351,6 +359,13 @@
                                                                                     </asp:Panel>
                                                                                 </th>
                                                                             </tr>
+                                                                              <tr>
+                                                                                <td colspan="2" align="left"  >
+                                                                                
+                                                                                     <asp:Button  ID="bntAddDropDown" runat="server"   onclick="FieldAdd"  Text="+"  cssclass="ShortButton" tooltip="Add Drop Down List" ></asp:Button>
+                                                                                </td>
+                                                                            
+                                                                            </tr>
                                                                         </table>
                                                                     </Content>
                                                                 </asp:AccordionPane>
@@ -368,6 +383,13 @@
                                                                                 <td   style=" font-weight:normal; font-size:11px;">
                                                                                     <asp:CheckBox ID="chkChecked" runat="server" Text="Checked"  TextAlign="Left"/>
                                                                                 </td>
+                                                                            </tr>
+                                                                             <tr>
+                                                                                <td colspan="2" align="left"  >
+                                                                                
+                                                                                     <asp:Button  ID="bntAddCheckBox" runat="server"   onclick="FieldAdd"  Text="+"  cssclass="ShortButton" tooltip="Add Check Box" ></asp:Button>
+                                                                                </td>
+                                                                            
                                                                             </tr>
                                                                         </table>
                                                                     </Content>
@@ -424,6 +446,12 @@
                 </asp:textbox>
             </th>
         </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <asp:button id="bntAddDate" runat="server" onclick="FieldAdd" text="+" cssclass="ShortButton"
+                    tooltip="Add Check Box"></asp:button>
+            </td>
+        </tr>
     </table>
     </Content> </asp:AccordionPane>
     <asp:accordionpane id="Image" headercssclass="cssFormDesignAccordionHead" headerselectedcssclass=".cssFormDesignSelectedHead"
@@ -464,6 +492,13 @@
                                                                                 <th>
                                                                                     <asp:CheckBox ID="chkImageWithLabel" runat="server"  />
                                                                                 </th>
+                                                                            </tr>
+                                                                              <tr>
+                                                                                <td colspan="2" align="left"  >
+                                                                                
+                                                                                     <asp:Button  ID="bntAddImage" runat="server"   onclick="FieldAdd"  Text="+"  cssclass="ShortButton" Tooltip="Add Image Control" ></asp:Button>
+                                                                                </td>
+                                                                            
                                                                             </tr>
                                                                         </table>
                                                                     </content>
@@ -520,6 +555,13 @@
                                                                                     <asp:TextBox ID="txtContent" runat="server" MaxLength="200" SkinID="TextBox"></asp:TextBox>
                                                                                 </th>
                                                                             </tr>
+                                                                              <tr>
+                                                                                <td colspan="2" align="left"  >
+                                                                                
+                                                                                     <asp:Button  ID="bntAddURL" runat="server"   onclick="FieldAdd"  Text="+"  cssclass="ShortButton"  tooltip="Add URL Control" ></asp:Button>
+                                                                                </td>
+                                                                            
+                                                                            </tr>
                                                                         </table>
                                                                     </content>
     </asp:accordionpane>
@@ -528,7 +570,8 @@
 </td> </tr>
 <tr align="center" valign="bottom">
     <td>
-        <asp:button id="bntFieldAdd" runat="server" text="Add" onclick="FieldAdd" skinid="bntMiddle" />&nbsp;
+        <asp:button id="bntFieldAdd" runat="server" text="Add" onclick="FieldAdd" skinid="bntMiddle"
+            style="display: none;" />&nbsp;
         <asp:button id="bntSaveAllFields" runat="server" text="Save" skinid="bntMiddle" onclick="FieldSave" />&nbsp;
         <asp:button id="bntFieldDelete" runat="server" text="Remove" skinid="bntMiddle" onclick="FieldRemove" />&nbsp;
     </td>
