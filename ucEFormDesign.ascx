@@ -195,7 +195,7 @@
                                                 </th>
                                                 <td>
                                                     <asp:DropDownList ID="ddlFields" runat="server"  SkinID="eFormDropDownList"  Width="200px"
-                                                        OnSelectedIndexChanged="Fields_OnSelectedIndexChanged">
+                                                     autopost="true"     OnSelectedIndexChanged="Fields_OnSelectedIndexChanged">
                                                     </asp:DropDownList>
                                                 </td>
                                             </tr>
@@ -296,7 +296,7 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td colspan="2" align="left"  >
-                                                                                
+                                                                            
                                                                                      <asp:Button  ID="bntAddTextBox" runat="server"   onclick="FieldAdd"  Text="+"  cssclass="ShortButton" tooltip="Add Text Box" ></asp:Button>
                                                                                 </td>
                                                                             
@@ -577,7 +577,9 @@
     </td>
 </tr>
 </table> </asp:Panel> </ContentTemplate> </asp:TabPanel> </asp:TabContainer> </ContentTemplate>
-</asp:UpdatePanel> </td> </tr> </table> </div> <a id="statusBox" href="#status" title=""
+</asp:UpdatePanel> 
+
+</td> </tr> </table> </div> <a id="statusBox" href="#status" title=""
     style="display: none;">Inline</a>
 <asp:hiddenfield id="hidControlList" runat="server" />
 <asp:hiddenfield id="hidLabelList" runat="server" />
