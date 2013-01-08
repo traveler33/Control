@@ -205,51 +205,51 @@
                                             <td  style="display:none;">
                                                 <asp:TextBox ID="txtTextBoxName" runat="server" MaxLength="100" SkinID="eFormMidTextBox"></asp:TextBox>
                                             </td>
-        </tr>
-        <tr>
-            <th>
-                <asp:label id="lblLabelName" runat="server" skinid="label" text="Label" tooltip="Label Text">
-                </asp:label>
-            </th>
-            <td>
-                <asp:textbox id="txtLabelName" runat="server" maxlength="100" skinid="eFormMidTextBox">
-                </asp:textbox>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                <asp:label id="lblSkin" runat="server" skinid="label" text="Skin ID" tooltip="Choose a existing skin id">
-                </asp:label>
-            </th>
-            <td>
-                <asp:textbox id="txtSkin" runat="server" maxlength="100" skinid="eFormMidTextBox">
-                </asp:textbox>
-            </td>
-        </tr>
-        <tr>
-            <th align="center" style="font-weight: normal; font-size: 11px;">
-            </th>
-            <th>
-                <asp:label id="lblFieldEnabled" runat="server" skinid="label" text="Enabled" tooltip="Choose a existing skin id">
-                </asp:label>&nbsp;
-                <asp:checkbox id="chkFieldEnabled" runat="server" textalign="Left" />
-                &nbsp;&nbsp;
-                <asp:label id="lblFieldVisible" runat="server" skinid="label" text="Visible" tooltip="Choose a existing skin id">
-                </asp:label>&nbsp;
-                <asp:checkbox id="chkFieldVisible" runat="server" textalign="Left" />
-            </th>
-        </tr>
-    </table>
-    <table cellpadding="2" cellspacing="2" border="0" style="width: 320px; height: 200px;">
-        <tr>
-            <td colspan="2" valign="top" align="center">
-                <div style="overflow: auto; height: 335px;">
-                    <asp:accordion id="accordionFormDesign" runat="server" headercssclass="cssFormDesignAccordionHead"
-                        headerselectedcssclass="cssFormDesignSelectedHead" contentcssclass="cssFormDesignAccordionContent"
-                        width="240px" bordercolor="#F0F0F0" borderstyle="Solid" borderwidth="1px" height="240px"
-                        fadetransitions="false" transitionduration="250" framespersecond="40" requireopenedpane="false"
-                        suppressheaderpostbacks="true">
-                        <panes>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <asp:label id="lblLabelName" runat="server" skinid="label" text="Label" tooltip="Label Text">
+                                                </asp:label>
+                                            </th>
+                                            <td>
+                                                <asp:textbox id="txtLabelName" runat="server" maxlength="100" skinid="eFormMidTextBox">
+                                                </asp:textbox>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <asp:label id="lblSkin" runat="server" skinid="label" text="Skin ID" tooltip="Choose a existing skin id">
+                                                </asp:label>
+                                            </th>
+                                            <td>
+                                                <asp:textbox id="txtSkin" runat="server" maxlength="100" skinid="eFormMidTextBox">
+                                                </asp:textbox>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th align="center" style="font-weight: normal; font-size: 11px;">
+                                            </th>
+                                            <th>
+                                                <asp:label id="lblFieldEnabled" runat="server" skinid="label" text="Enabled" tooltip="Choose a existing skin id">
+                                                </asp:label>&nbsp;
+                                                <asp:checkbox id="chkFieldEnabled" runat="server" textalign="Left" />
+                                                &nbsp;&nbsp;
+                                                <asp:label id="lblFieldVisible" runat="server" skinid="label" text="Visible" tooltip="Choose a existing skin id">
+                                                </asp:label>&nbsp;
+                                                <asp:checkbox id="chkFieldVisible" runat="server" textalign="Left" />
+                                            </th>
+                                        </tr>
+                                    </table>
+                                    <table cellpadding="2" cellspacing="2" border="0" style="width: 320px; height: 200px;">
+                                        <tr>
+                                            <td colspan="2" valign="top" align="center">
+                                                <div style="overflow: auto; height: 335px;">
+                                                    <asp:accordion id="accordionFormDesign" runat="server" headercssclass="cssFormDesignAccordionHead"
+                                                        headerselectedcssclass="cssFormDesignSelectedHead" contentcssclass="cssFormDesignAccordionContent"
+                                                        width="240px" bordercolor="#F0F0F0" borderstyle="Solid" borderwidth="1px" height="240px"
+                                                        fadetransitions="false" transitionduration="250" framespersecond="40" requireopenedpane="false"
+                                                        suppressheaderpostbacks="true">
+                                                        <panes>
                                                                 <asp:AccordionPane ID="TextBox" HeaderCssClass="cssFormDesignAccordionHead" HeaderSelectedCssClass="cssFormDesignSelectedHead"
                                                                     ContentCssClass="cssFormDesignAccordionContent" runat="server" ToolTip="Text Box">
                                                                     <Header>
@@ -502,14 +502,14 @@
                                                                             </tr>
                                                                         </table>
                                                                     </content>
-    </asp:accordionpane>
-    <asp:accordionpane id="Hyperlink" headercssclass="cssFormDesignAccordionHead" headerselectedcssclass=".cssFormDesignSelectedHead"
-        contentcssclass="cssFormDesignAccordionContent" runat="server" height="120px"
-        tooltip="Hyper link">
-        <header>
+                                                        </asp:accordionpane>
+                                                        <asp:accordionpane id="Hyperlink" headercssclass="cssFormDesignAccordionHead" headerselectedcssclass=".cssFormDesignSelectedHead"
+                                                            contentcssclass="cssFormDesignAccordionContent" runat="server" height="120px"
+                                                            tooltip="Hyper link">
+                                                            <header>
                                                                         <asp:Label ID="lblLinkHead" runat="server" SkinID="label" Text="HyperLink"></asp:Label>
                                                                     </header>
-        <content>
+                                                                             <content>
                                                                         <table cellpadding="1" cellspacing="1" style="width: 100%; height: 100%">
                                                                             <tr>
                                                                                 <th>
